@@ -13,13 +13,8 @@ public class App {
 
 		while (true) {
 			try {
-				System.out.println("================ Welcome to RequestSender ================");
+				System.out.println("\n================ Welcome to RequestSender ================");
 				String url = clientMenu.readUrl();
-				
-				if (url.equalsIgnoreCase("x")) {
-		            System.out.println("Closing RequestSender. Good Bye!");
-		            break;
-		        }
 				String method = clientMenu.selectMethod();
 				String body = clientMenu.verifyBody(method);
 
@@ -28,13 +23,13 @@ public class App {
 
 				System.out.println("\n================ Response Body ================");
 				System.out.println("Status Code : " + response.statusCode());
-				
-				httpService.errorResponse(response.statusCode(), method, response.body());
+				System.out.println("Body        :");
+				System.out.println(response.body());
 
 				System.out.println("===========================================================");
 
 			} catch (Exception ex) {
-				System.err.println("Connection refused");
+				System.err.println("Connection imterrupted");
 			}
 		}
 
