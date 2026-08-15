@@ -1,5 +1,7 @@
 package menu;
 
+import utils.JsonFormatter;
+
 import java.net.URI;
 import java.net.URISyntaxException;;
 import java.util.Scanner;
@@ -27,6 +29,7 @@ public class ClientMenu {
 			String url = scan.nextLine().trim();
 
 			if (url.equalsIgnoreCase("x")) {
+				System.out.println("Good bye...");
 				return "x";
 			}
 			if (isValidUrl(url)) {
@@ -37,7 +40,7 @@ public class ClientMenu {
 	}
 	public String selectMethod() {
 		while (true) {
-			System.out.println("Qual é o tipo da requisição?\n1 - GET\n2 - POST\n3 - PUT\n4 - PATCH\n5 - DELETE\n6 - OPTIONS\nEscolha entre 1 e 6: \" ");
+			System.out.println("What is the request type?\n1 - GET\n2 - POST\n3 - PUT\n4 - PATCH\n5 - DELETE\n6 - OPTIONS\nChoose from 1 to 6: \" ");
 			String input = scan.nextLine().trim();
 
 			try {
@@ -63,8 +66,22 @@ public class ClientMenu {
 		if(!needsBody) {
 			return "";
 		}
-		System.out.println("Digite o corpo em json:");
-		return scan.nextLine();
+		System.out.println("Insert the json body (Tap enter on a empty line to confirm):");
+		StringBuilder jsonInput = new StringBuilder();
+
+		while (scan.hasNextLine()) {
+			String line = scan.nextLine();
+			if (line.trim().isEmpty()) {
+				break;
+			}
+			jsonInput.append(line);
+		}
+		String rawBody = jsonInput.toString();
+		System.out.println("\n[Payload Registrado]:");
+		System.out.println(JsonFormatter.format(rawBody));
+		System.out.println("----------------------");
+
+		return rawBody;
 	}
 	
 }
