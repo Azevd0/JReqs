@@ -8,30 +8,9 @@ import menu.ClientMenu;
 public class App {
 
 	public static void main(String[] args) {
-		ClientMenu clientMenu = new ClientMenu();
-		HttpClientService httpService = new HttpClientService();
+		MainMenu menu = new MainMenu();
+		menu.showMenu();
 
-		while (true) {
-			try {
-				System.out.println("\n================ Welcome to RequestSender ================");
-				String url = clientMenu.readUrl();
-				String method = clientMenu.selectMethod();
-				String body = clientMenu.verifyBody(method);
-
-				System.out.printf("Sending request %s to %s ...", method, url);
-				HttpResponse<String> response = httpService.sendRequest(url, method, body);
-
-				System.out.println("\n================ Response Body ================");
-				System.out.println("Status Code : " + response.statusCode());
-				System.out.println("Body        :");
-				System.out.println(response.body());
-
-				System.out.println("===========================================================");
-
-			} catch (Exception ex) {
-				System.err.println("Connection imterrupted");
-			}
-		}
 
 	}
 }

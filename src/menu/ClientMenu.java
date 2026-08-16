@@ -37,8 +37,7 @@ public class ClientMenu {
 	}
 	public String selectMethod() {
 		while (true) {
-			System.out.println("Qual é o tipo da requisição?\n1 - GET\n2 - POST\n3 - PUT\n4 - PATCH\n5 - DELETE\n6 - OPTIONS\nEscolha entre 1 e 6: \" ");
-			String input = scan.nextLine().trim();
+			System.out.println("What is the request type?\n1 - GET\n2 - POST\n3 - PUT\n4 - PATCH\n5 - DELETE\n6 - OPTIONS\nChoose from 1 to 6: \" ");			String input = scan.nextLine().trim();
 
 			try {
 				int option = Integer.parseInt(input);
@@ -63,7 +62,7 @@ public class ClientMenu {
 		if(!needsBody) {
 			return "";
 		}
-		System.out.println("Digite o corpo em json:");
+		System.out.println("Insert the json body (Tap enter on a empty line to confirm):");
 		return scan.nextLine();
 	}
 	
