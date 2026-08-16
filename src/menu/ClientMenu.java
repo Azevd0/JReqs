@@ -1,7 +1,9 @@
 package menu;
 
+import java.net.InetAddress;
 import java.net.URI;
-import java.net.URISyntaxException;;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class ClientMenu {
@@ -20,6 +22,23 @@ public class ClientMenu {
 			return false;
 		}
 	}
+	public boolean isHostResolvable(String uriString) {
+		try {
+			URI uri = new URI(uriString);
+			String host = uri.getHost();
+
+			if (host == null) {
+				return false;
+			}
+			InetAddress.getByName(host);
+			return true;
+
+		} catch (UnknownHostException e) {
+			return false;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 
 	public String readUrl() {
 		while (true) {
@@ -29,12 +48,19 @@ public class ClientMenu {
 			if (url.equalsIgnoreCase("x")) {
 				return "x";
 			}
-			if (isValidUrl(url)) {
-				return url;
+			if (!isValidUrl(url)) {
+				System.out.println("[!] Invalid or malformed URL. Please check the address (e.g., http://localhost:8080/api).");
+				continue;
 			}
-			System.out.println("[!] Invalid or malformed URL. Please check the address (e.g., http://localhost:8080/api).");
+
+			if (!isHostResolvable(url)) {
+				System.out.println("[!] Host not found. Please check for typos in the domain (e.g., 'locahost' instead of 'localhost').");
+				continue;
+			}
+			return url;
 		}
 	}
+
 	public String selectMethod() {
 		while (true) {
 			System.out.println("What is the request type?\n1 - GET\n2 - POST\n3 - PUT\n4 - PATCH\n5 - DELETE\n6 - OPTIONS\nChoose from 1 to 6: \" ");			String input = scan.nextLine().trim();

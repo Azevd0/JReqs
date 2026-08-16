@@ -41,7 +41,7 @@ public class MainMenu {
                 System.out.println("Body          :\n"+ response.body());
                 System.out.println("==================================================");
             } catch (Exception ex) {
-                System.err.println("Connection imterrupted");
+                System.err.println("Error! Invalid Url. Connection imterrupted.");
             }
         }
     }
