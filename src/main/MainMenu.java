@@ -2,6 +2,7 @@ package main;
 
 import httpService.HttpClientService;
 import menu.ClientMenu;
+import utils.JsonFormatter;
 
 import java.net.http.HttpResponse;
 
@@ -31,17 +32,19 @@ public class MainMenu {
                 System.out.println("Status Code   : " + response.statusCode());
                 System.out.println("Response Time : " + responseTimeMs + " ms");
 
-                if (response.body() == null) {
+                String responseBody = response.body();
+
+                if (responseBody == null) {
                     throw new Exception("Error! Json body not readable!");
                 }
-                String trimmedBody = response.body().trim();
+                String trimmedBody = responseBody.trim();
                 if (!trimmedBody.startsWith("{") && !trimmedBody.startsWith("[")) {
                     throw new Exception("Error! Json body not readable!");
                 }
-                System.out.println("Body          :\n"+ response.body());
+                System.out.println(JsonFormatter.formatJson(responseBody));
                 System.out.println("==================================================");
             } catch (Exception ex) {
-                System.err.println("Error! Invalid Url. Connection imterrupted.");
+                System.err.println("Error: " + ex.getMessage());
             }
         }
     }
