@@ -4,6 +4,7 @@ import httpService.HttpClientService;
 import menu.ClientMenu;
 import utils.JsonFormatter;
 
+import java.io.IOException;
 import java.net.http.HttpResponse;
 
 public class MainMenu {
@@ -35,16 +36,20 @@ public class MainMenu {
                 String responseBody = response.body();
 
                 if (responseBody == null) {
-                    throw new Exception("Error! Json body not readable!");
+                    throw new IOException("Error! Json body not readable!");
                 }
                 String trimmedBody = responseBody.trim();
                 if (!trimmedBody.startsWith("{") && !trimmedBody.startsWith("[")) {
-                    throw new Exception("Error! Json body not readable!");
+                    throw new IOException("Error! Json body not readable!");
                 }
                 System.out.println(JsonFormatter.formatJson(responseBody));
-                System.out.println("==================================================");
-            } catch (Exception ex) {
+
+            } catch (IOException ex) {
                 System.err.println("Error: " + ex.getMessage());
+            }
+            catch (InterruptedException e) {
+                System.err.println("Requisição interrompida: " + e.getMessage());
+                Thread.currentThread().interrupt();
             }
         }
     }

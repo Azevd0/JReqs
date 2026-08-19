@@ -2,25 +2,23 @@ package menu;
 
 import utils.JsonFormatter;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
-import java.util.Scanner;
 
 public class ClientMenu {
 
-	private final Scanner scan;
-
-	public ClientMenu() {
-		this.scan = new Scanner(System.in);
-	}
+	private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
 	public boolean isValidUrl(String uriString){
 		try {
-            URI uri = new URI(uriString);
+			URI uri = new URI(uriString);
 			return uri.getScheme() != null && uri.getHost() !=null;
-        } catch (URISyntaxException e) {
+		} catch (URISyntaxException e) {
 			return false;
 		}
 	}
@@ -42,10 +40,10 @@ public class ClientMenu {
 		}
 	}
 
-	public String readUrl() {
+	public String readUrl() throws IOException {
 		while (true) {
 			System.out.print("Insert the url (or x to exit): ");
-			String url = scan.nextLine().trim();
+			String url = reader.readLine().trim();
 
 			if (url.equalsIgnoreCase("x")) {
 				return "x";
@@ -63,10 +61,10 @@ public class ClientMenu {
 		}
 	}
 
-	public String selectMethod() {
+	public String selectMethod() throws IOException {
 		while (true) {
 			System.out.println("What is the request type?\n1 - GET\n2 - POST\n3 - PUT\n4 - PATCH\n5 - DELETE\n6 - OPTIONS\nChoose from 1 to 6: \" ");
-			String input = scan.nextLine().trim();
+			String input = reader.readLine().trim();
 
 			try {
 				int option = Integer.parseInt(input);
@@ -85,8 +83,8 @@ public class ClientMenu {
 			}
 		}
 	}
-	
-	public String verifyBody(String method) {
+
+	public String verifyBody(String method) throws IOException {
 
 		boolean needsBody = method.equals("POST") || method.equals("PUT") || method.equals("PATCH");
 
@@ -95,9 +93,8 @@ public class ClientMenu {
 		}
 		System.out.println("Insert the json body (Tap enter on a empty line to confirm):");
 		StringBuilder jsonInput = new StringBuilder();
-
-		while (scan.hasNextLine()) {
-			String line = scan.nextLine();
+		String line;
+		while ((line = reader.readLine()) != null) {
 			if (line.trim().isEmpty()) {
 				break;
 			}
@@ -106,6 +103,7 @@ public class ClientMenu {
 
 		String rawBody = jsonInput.toString();
 		System.out.println("DEBUG raw=" + rawBody);
+
 		try (var fw = new java.io.FileWriter("/tmp/debug_body.log", true)) {
 			fw.write("=== ciclo ===\n" + rawBody + "\n");
 		} catch (Exception e) {
