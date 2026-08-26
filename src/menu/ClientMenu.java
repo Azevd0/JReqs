@@ -5,10 +5,7 @@ import utils.JsonFormatter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.UnknownHostException;
+import java.net.*;
 
 public class ClientMenu {
 
@@ -39,6 +36,24 @@ public class ClientMenu {
 			return false;
 		}
 	}
+	public boolean isValidPort(String uriString){
+		try {
+            URI uri = new URI(uriString);
+			int port = uri.getPort();
+			String ip = "127.0.0.1";
+
+			if(port == -1){
+				return false;
+			}
+			try (Socket socket = new Socket(ip, port)) {
+				return true;
+            } catch (IOException e) {
+                return false;
+            }
+        } catch (URISyntaxException e) {
+            return false;
+        }
+	}
 
 	public String readUrl() throws IOException {
 		while (true) {
@@ -52,9 +67,12 @@ public class ClientMenu {
 				System.out.println("[!] Invalid or malformed URL. Please check the address (e.g., http://localhost:8080/api).");
 				continue;
 			}
-
 			if (!isHostResolvable(url)) {
 				System.out.println("[!] Host not found. Please check for typos in the domain (e.g., 'locahost' instead of 'localhost').");
+				continue;
+			}
+			if(!isValidPort(url)){
+				System.out.println("[!] Port not found. Please check for port number in the domain (e.g., ':8080/').");
 				continue;
 			}
 			return url;
@@ -92,26 +110,11 @@ public class ClientMenu {
 			return "";
 		}
 		System.out.println("Insert the json body (Tap enter on a empty line to confirm):");
-		StringBuilder jsonInput = new StringBuilder();
-		String line;
-		while ((line = reader.readLine()) != null) {
-			if (line.trim().isEmpty()) {
-				break;
-			}
-			jsonInput.append(line).append("\n");
-		}
+		String jsonBody = reader.readLine();
 
-		String rawBody = jsonInput.toString();
-		System.out.println("DEBUG raw=" + rawBody);
-
-		try (var fw = new java.io.FileWriter("/tmp/debug_body.log", true)) {
-			fw.write("=== ciclo ===\n" + rawBody + "\n");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println("\n[Registred payload]:\n"+ JsonFormatter.formatJson(rawBody));
+		System.out.println("\n[Registred payload]:\n"+ JsonFormatter.formatJson(jsonBody));
 		System.out.println("----------------------------------------------");
-		return rawBody;
+		return jsonBody;
 
 	}
 

@@ -48,7 +48,7 @@ public class MainMenu {
                 System.err.println("Error: " + ex.getMessage());
             }
             catch (InterruptedException e) {
-                System.err.println("Requisição interrompida: " + e.getMessage());
+                System.err.println("Conection interrupted: " + e.getMessage());
                 Thread.currentThread().interrupt();
             }
         }
