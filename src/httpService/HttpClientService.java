@@ -9,6 +9,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.Map;
 
 public class HttpClientService {
 	private final HttpClient client;
@@ -21,18 +22,24 @@ public class HttpClientService {
 				.build();
 	}
 	
-	public HttpResponse<String> sendRequest(String url, String method, String body) throws IOException, InterruptedException {
+	public HttpResponse<String> sendRequest(String url, String method, String body, Map<String, String> headers) throws IOException, InterruptedException {
 		boolean hasBody = method.equals("POST") || method.equals("PUT") || method.equals("PATCH");
 
 		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
 				.uri(URI.create(url));
 
-		HttpRequest.BodyPublisher bodyPublisher = hasBody
-				? HttpRequest.BodyPublishers.ofString(body) : HttpRequest.BodyPublishers.noBody();
+		if (headers != null && !headers.isEmpty()) {
+			headers.forEach(requestBuilder::header);
+		}
 
 		if (hasBody) {
-			requestBuilder.header("Content-Type", "application/json");
+			if (headers == null || !headers.containsKey("Content-Type")) {
+				requestBuilder.header("Content-Type", "application/json");
+			}
 		}
+		HttpRequest.BodyPublisher bodyPublisher = hasBody
+				? HttpRequest.BodyPublishers.ofString(body)
+				: HttpRequest.BodyPublishers.noBody();
 
 		switch (method) {
 			case "GET":

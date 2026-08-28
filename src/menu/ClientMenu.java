@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClientMenu {
 
@@ -27,12 +29,10 @@ public class ClientMenu {
 			if (host == null) {
 				return false;
 			}
-			InetAddress.getByName(host);
+			InetAddress address = InetAddress.getByName(host);
 			return true;
 
-		} catch (UnknownHostException e) {
-			return false;
-		} catch (Exception e) {
+		} catch (UnknownHostException | URISyntaxException e) {
 			return false;
 		}
 	}
@@ -68,7 +68,7 @@ public class ClientMenu {
 				continue;
 			}
 			if (!isHostResolvable(url)) {
-				System.out.println("[!] Host not found. Please check for typos in the domain (e.g., 'locahost' instead of 'localhost').");
+				System.out.println("[!] Host not found. Please check for typos in the domain.");
 				continue;
 			}
 			if(!isValidPort(url)){
@@ -102,14 +102,67 @@ public class ClientMenu {
 		}
 	}
 
-	public String verifyBody(String method) throws IOException {
+	public Map<String, String> readHeaders() throws IOException {
+		Map<String, String> headers = new HashMap<>();
 
+		while (true) {
+			System.out.println("\nDo you want to add a Header?\n1 - Authorization (Bearer Token)\n2 - Content-Type\n3 - Custom Header (Key / Value)\n0 - Done / Skip\nChoose an option: ");
+			String input = reader.readLine().trim();
+			int option;
+
+			try {
+				option = Integer.parseInt(input);
+			} catch (NumberFormatException e) {
+				System.out.println("[!] Invalid input, enter numbers only.");
+				continue;
+			}
+
+			switch (option) {
+				case 1:
+					System.out.print("Insert Token: ");
+					String token = reader.readLine().trim();
+					headers.put("Authorization", "Bearer " + token);
+					System.out.println("Authorization header added!");
+					break;
+
+				case 2:
+					System.out.print("Insert Content-Type (e.g., application/json, text/plain): ");
+					String contentType = reader.readLine().trim();
+					headers.put("Content-Type", contentType);
+					System.out.println("Content-Type header added!");
+					break;
+
+				case 3:
+					System.out.print("Insert Header Key: ");
+					String key = reader.readLine().trim();
+					System.out.print("Insert Header Value: ");
+					String value = reader.readLine().trim();
+
+					if (!key.isEmpty() && !value.isEmpty()) {
+						headers.put(key, value);
+						System.out.println("Custom header added!");
+						break;
+					}
+					System.out.println("Key and Value cannot be empty.");
+					break;
+
+				case 0:
+					return headers;
+
+				default:
+					System.out.println("[!] Invalid option. Choose between 0 and 3.");
+					break;
+			}
+		}
+	}
+
+	public String verifyBody(String method) throws IOException {
 		boolean needsBody = method.equals("POST") || method.equals("PUT") || method.equals("PATCH");
 
 		if(!needsBody) {
 			return "";
 		}
-		System.out.println("Insert the json body (Tap enter on a empty line to confirm):");
+		System.out.println("Enter the JSON body or press Enter if you do not need to write JSON. (Tap enter on a empty line to confirm):");
 		String jsonBody = reader.readLine();
 
 		System.out.println("\n[Registred payload]:\n"+ JsonFormatter.formatJson(jsonBody));
