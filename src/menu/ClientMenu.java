@@ -12,6 +12,7 @@ import java.util.Map;
 public class ClientMenu {
 
 	private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+	private final Map<String, String> activeHeaders = new HashMap<>();
 
 	public boolean isValidUrl(String uriString){
 		try {
@@ -103,17 +104,29 @@ public class ClientMenu {
 	}
 
 	public Map<String, String> readHeaders() throws IOException {
-		Map<String, String> headers = new HashMap<>();
+
+		if (!activeHeaders.isEmpty()) {
+			System.out.println("\nActive session headers: " + activeHeaders);
+			System.out.print("Keep and proceed (Y) | Clear all (N) | Type anything else to add more Choose:");
+			String keep = reader.readLine().trim();
+
+			if (keep.equalsIgnoreCase("Y")) {
+				return activeHeaders;
+			}
+			if(keep.equalsIgnoreCase("N")){
+				activeHeaders.clear();
+			}
+		}
 
 		while (true) {
-			System.out.println("\nDo you want to add a Header?\n1 - Authorization (Bearer Token)\n2 - Content-Type\n3 - Custom Header (Key / Value)\n0 - Done / Skip\nChoose an option: ");
+			System.out.println("\nSelect header options or tap 0 to clear\n1 - Authorization (Bearer Token)\n2 - Content-Type\n3 - Custom Header (Key / Value)\n4 - Clear session headers\n0 - Done / Skip\nChoose an option: ");
 			String input = reader.readLine().trim();
 			int option;
 
 			try {
 				option = Integer.parseInt(input);
 			} catch (NumberFormatException e) {
-				System.out.println("[!] Invalid input, enter numbers only.");
+				System.err.println("[!] Invalid input, enter numbers only.");
 				continue;
 			}
 
@@ -121,14 +134,14 @@ public class ClientMenu {
 				case 1:
 					System.out.print("Insert Token: ");
 					String token = reader.readLine().trim();
-					headers.put("Authorization", "Bearer " + token);
+					activeHeaders.put("Authorization", "Bearer " + token);
 					System.out.println("Authorization header added!");
 					break;
 
 				case 2:
 					System.out.print("Insert Content-Type (e.g., application/json, text/plain): ");
 					String contentType = reader.readLine().trim();
-					headers.put("Content-Type", contentType);
+					activeHeaders.put("Content-Type", contentType);
 					System.out.println("Content-Type header added!");
 					break;
 
@@ -139,18 +152,21 @@ public class ClientMenu {
 					String value = reader.readLine().trim();
 
 					if (!key.isEmpty() && !value.isEmpty()) {
-						headers.put(key, value);
+						activeHeaders.put(key, value);
 						System.out.println("Custom header added!");
 						break;
 					}
-					System.out.println("Key and Value cannot be empty.");
+					System.err.println("[!] Key and Value cannot be empty.");
 					break;
-
+				case 4:
+					activeHeaders.clear();
+					System.out.println("Session headers cleared.");
+					break;
 				case 0:
-					return headers;
+					return activeHeaders;
 
 				default:
-					System.out.println("[!] Invalid option. Choose between 0 and 3.");
+					System.err.println("[!] Invalid option. Choose between 0 and 4.");
 					break;
 			}
 		}

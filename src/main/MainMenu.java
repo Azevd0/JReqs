@@ -35,16 +35,7 @@ public class MainMenu {
                 System.out.println("Status Code   : " + response.statusCode());
                 System.out.println("Response Time : " + responseTimeMs + " ms");
 
-                String responseBody = response.body();
-
-                if (responseBody == null) {
-                    throw new IOException("Error! JSON body not readable!");
-                }
-                String trimmedBody = responseBody.trim();
-                if (!trimmedBody.startsWith("{") && !trimmedBody.startsWith("[")) {
-                    throw new IOException("Error! JSON body not readable!");
-                }
-                System.out.println(JsonFormatter.formatJson(responseBody));
+                printResponseBody(response.body());
 
             } catch (IOException ex) {
                 System.err.println("Error: " + ex.getMessage());
@@ -53,6 +44,27 @@ public class MainMenu {
                 System.err.println("Conection interrupted: " + e.getMessage());
                 Thread.currentThread().interrupt();
             }
+        }
+    }
+
+    private void printResponseBody(String body) {
+        if (body == null || body.trim().isEmpty()) {
+            System.out.println("[No Content in Response Body]");
+            return;
+        }
+        String trimmedBody = body.trim();
+        if (trimmedBody.startsWith("{") || trimmedBody.startsWith("[")) {
+            tryFormatAndPrintJson(body);
+            return;
+        }
+        System.out.println(body);
+    }
+
+    private void tryFormatAndPrintJson(String rawBody) {
+        try {
+            System.out.println(JsonFormatter.formatJson(rawBody));
+        } catch (Exception e) {
+            System.out.println(rawBody);
         }
     }
 }
