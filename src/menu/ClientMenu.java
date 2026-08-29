@@ -107,7 +107,7 @@ public class ClientMenu {
 
 		if (!activeHeaders.isEmpty()) {
 			System.out.println("\nActive session headers: " + activeHeaders);
-			System.out.print("Keep and proceed (Y) | Clear all (N) | Type anything else to add more Choose:");
+			System.out.print("Keep and proceed (Y) | Clear all (N) | Type anything else to add more:");
 			String keep = reader.readLine().trim();
 
 			if (keep.equalsIgnoreCase("Y")) {
