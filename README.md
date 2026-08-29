@@ -2,7 +2,7 @@
 
 JReqs is an API development platform built with Java SE for sending HTTP requests such as **GET, POST, PUT, and others**.
 
-The project uses Java's built-in `java.net.http` API together with Jakarta JSON for working with JSON data. The repository is organized as a Java module named `ClientRequestSender`. citeturn1file0turn4file0
+The project uses Java's built-in `java.net.http` API together with Jakarta JSON for working with JSON data. The repository is organized as a Java module named `ClientRequestSender`. 
 
 ## Requirements
 
@@ -11,7 +11,7 @@ Before building the project, make sure you have:
 - **Java Development Kit (JDK)** installed, with both `javac`, `jar`, and `java` available in your terminal.
 - A terminal opened at the **root of the cloned repository**.
 
-The required JSON libraries are already included in `src/libs`, so they do not need to be downloaded separately. citeturn5file0
+The required JSON libraries are already included in `src/libs`, so they do not need to be downloaded separately.
 
 ## Clone the repository
 
@@ -70,7 +70,7 @@ java --module-path JReqs.jar:src/libs --module ClientRequestSender/main.App
 
 ## Project structure
 
-The main source code is located under `src/` and is divided into the following packages: citeturn3file0
+The main source code is located under `src/` and is divided into the following packages:
 
 ```text
 JReqs/
@@ -85,7 +85,7 @@ JReqs/
 └── JReqs.jar          # Generated executable JAR
 ```
 
-The `src/libs` directory currently contains the Jakarta JSON API and Parsson JARs used by the application. citeturn5file0
+The `src/libs` directory currently contains the Jakarta JSON API and Parsson JARs used by the application.
 
 ## Cleaning the build
 
@@ -107,5 +107,5 @@ After cleaning, repeat the build steps above to compile the application again.
 ## Notes
 
 - Run all commands from the repository root.
-- The project is a modular Java application, and `module-info.java` declares the `java.net.http` and `jakarta.json` module dependencies. citeturn4file0
-- The build commands assume the dependency JARs remain in `src/libs`. citeturn5file0
+- The project is a modular Java application, and `module-info.java` declares the `java.net.http` and `jakarta.json` module dependencies.
+- The build commands assume the dependency JARs remain in `src/libs`.
