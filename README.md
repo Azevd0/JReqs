@@ -65,7 +65,7 @@ java --module-path JReqs.jar:src/libs --module ClientRequestSender/main.App
 > **Windows note:** On Windows, replace `:` in the module path with `;`:
 >
 > ```powershell
-> java --module-path JReqs.jar;src/libs --module ClientRequestSender/main.App
+> java --module-path "JReqs.jar;src/libs" --module ClientRequestSender/main.App
 > ```
 
 ## Project structure
