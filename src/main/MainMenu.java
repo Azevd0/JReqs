@@ -34,7 +34,7 @@ public class MainMenu {
                 System.out.println("\n================ Response Body ================");
                 System.out.println("Status Code   : " + response.statusCode());
                 System.out.println("Response Time : " + responseTimeMs + " ms");
-
+                System.out.println("Body: ");
                 printResponseBody(response.body());
 
             } catch (IOException ex) {
