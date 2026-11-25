@@ -1,4 +1,4 @@
-package utils;
+package json;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -10,13 +10,18 @@ import jakarta.json.JsonReader;
 import jakarta.json.JsonValue;
 import jakarta.json.stream.JsonGenerator;
 
-public class JsonFormatter {
-    public static String formatJson(String jsonString) {
+public class JakartaJsonProcessor implements JsonProcessor {
+
+    @Override
+    public String formatJson(String jsonString) {
+
         if (jsonString == null || jsonString.isBlank()) {
             return "";
         }
+
         try (StringReader stringReader = new StringReader(jsonString);
-             JsonReader jsonReader = Json.createReader(stringReader)){
+                JsonReader jsonReader = Json.createReader(stringReader)) {
+
             JsonValue jsonValue = jsonReader.readValue();
 
             Map<String, Object> config = new HashMap<>();
@@ -24,10 +29,12 @@ public class JsonFormatter {
 
             StringWriter stringWriter = new StringWriter();
             var writerFactory = Json.createWriterFactory(config);
+
             try (var jsonWriter = writerFactory.createWriter(stringWriter)) {
                 jsonWriter.write(jsonValue);
             }
             return stringWriter.toString();
+
         } catch (Exception e) {
             return jsonString;
         }
