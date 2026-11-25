@@ -76,10 +76,10 @@ The main source code is located under `src/` and is divided into the following p
 JReqs/
 ├── src/
 │   ├── httpService/   # HTTP request functionality
+│   ├── json/          # Jakarta API Abstraction layers
 │   ├── libs/          # External JAR dependencies
 │   ├── main/          # Application entry point
 │   ├── menu/          # Application menu / interface
-│   ├── utils/         # Utility classes
 │   └── module-info.java
 ├── jreqsApp/          # Generated build output (created locally)
 └── JReqs.jar          # Generated executable JAR
