@@ -1,0 +1,6 @@
+* Linux:
+java --module-path JReqs.jar:src/libs --module ClientRequestSender/main.App
+
+* Windows:
+java --module-path "JReqs.jar;src/libs" --module ClientRequestSender/main.App
+

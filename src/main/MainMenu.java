@@ -2,7 +2,9 @@ package main;
 
 import httpService.HttpClientService;
 import menu.ClientMenu;
-import utils.JsonFormatter;
+
+import json.JsonProcessor;
+import json.JakartaJsonProcessor;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
@@ -10,60 +12,126 @@ import java.util.Map;
 
 public class MainMenu {
 
-    ClientMenu clientMenu = new ClientMenu();
-    HttpClientService httpService = new HttpClientService();
+    private final JsonProcessor jsonProcessor;
+    private final ClientMenu clientMenu;
+    private final HttpClientService httpService;
 
-    public void showMenu(){
+    public MainMenu() {
+        this(new JakartaJsonProcessor());
+    }
+
+    public MainMenu(JsonProcessor jsonProcessor) {
+
+        this.jsonProcessor = jsonProcessor;
+
+        this.clientMenu = new ClientMenu(jsonProcessor);
+
+        this.httpService = new HttpClientService();
+    }
+
+    public void showMenu() {
+
         while (true) {
+
             try {
-                System.out.println("\n================ Welcome to JReqs ================");
+
+                System.out.println(
+                        "\n================{ JReqs }================"
+                );
+
                 String url = clientMenu.readUrl();
+
                 if (url.equalsIgnoreCase("x")) {
                     break;
                 }
+
                 String method = clientMenu.selectMethod();
+
                 Map<String, String> headers = clientMenu.readHeaders();
+
                 String body = clientMenu.verifyBody(method);
 
-                System.out.printf("Sending request %s to %s ...", method, url);
+                System.out.printf(
+                        "Sending request %s to %s ...",
+                        method,
+                        url
+                );
+
                 long startTime = System.currentTimeMillis();
 
-                HttpResponse<String> response = httpService.sendRequest(url, method, body, headers);
-                long responseTimeMs = System.currentTimeMillis() - startTime;
+                HttpResponse<String> response =
+                        httpService.sendRequest(
+                                url,
+                                method,
+                                body,
+                                headers
+                        );
 
-                System.out.println("\n================ Response Body ================");
-                System.out.println("Status Code   : " + response.statusCode());
-                System.out.println("Response Time : " + responseTimeMs + " ms");
+                long responseTimeMs =
+                        System.currentTimeMillis() - startTime;
+
+                System.out.println(
+                        "\n================ Response Body ================"
+                );
+
+                System.out.println(
+                        "Status Code   : " + response.statusCode()
+                );
+
+                System.out.println(
+                        "Response Time : " + responseTimeMs + " ms"
+                );
+
                 System.out.println("Body: ");
+
                 printResponseBody(response.body());
 
             } catch (IOException ex) {
+
                 System.err.println("Error: " + ex.getMessage());
-            }
-            catch (InterruptedException e) {
-                System.err.println("Conection interrupted: " + e.getMessage());
+
+            } catch (InterruptedException e) {
+
+                System.err.println(
+                        "Connection interrupted: " + e.getMessage()
+                );
+
                 Thread.currentThread().interrupt();
+                break;
             }
         }
     }
 
     private void printResponseBody(String body) {
+
         if (body == null || body.trim().isEmpty()) {
+
             System.out.println("[No Content in Response Body]");
             return;
         }
+
         String trimmedBody = body.trim();
-        if (trimmedBody.startsWith("{") || trimmedBody.startsWith("[")) {
+
+        if (trimmedBody.startsWith("{") ||
+                trimmedBody.startsWith("[")) {
+
             tryFormatAndPrintJson(body);
             return;
         }
+
         System.out.println(body);
     }
 
     private void tryFormatAndPrintJson(String rawBody) {
+
         try {
-            System.out.println(JsonFormatter.formatJson(rawBody));
+
+            System.out.println(
+                    jsonProcessor.formatJson(rawBody)
+            );
+
         } catch (Exception e) {
+
             System.out.println(rawBody);
         }
     }
