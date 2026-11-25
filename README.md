@@ -39,7 +39,7 @@ You may use another folder name, but the same name must be used in the commands 
 From the repository root, run:
 
 ```bash
-javac -d jreqsApp --module-path src/libs src/module-info.java src/httpService/*.java src/main/*.java src/menu/*.java src/utils/*.java
+javac -d jreqsApp --module-path src/libs src/module-info.java src/httpService/*.java src/json/*.java src/main/*.java src/menu/*.java src/utils/*.java
 ```
 
 This command compiles the project's Java source files and places the generated `.class` files inside the `jreqsApp` directory.
@@ -59,13 +59,13 @@ The generated `JReqs.jar` file will be created in the repository root.
 Start JReqs with:
 
 ```bash
-java --module-path JReqs.jar:src/libs --module ClientRequestSender/main.App
+java --module-path "jreqsApp:src/libs" --module ClientRequestSender/main.App
 ```
 
 > **Windows note:** On Windows, replace `:` in the module path with `;`:
 >
 > ```powershell
-> java --module-path "JReqs.jar;src/libs" --module ClientRequestSender/main.App
+> java --module-path "jreqsApp;src/libs" --module ClientRequestSender/main.App
 > ```
 
 ## Project structure
