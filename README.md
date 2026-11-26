@@ -39,7 +39,7 @@ You may use another folder name, but the same name must be used in the commands 
 From the repository root, run:
 
 ```bash
-javac -d jreqsApp --module-path src/libs src/module-info.java src/httpService/*.java src/json/*.java src/main/*.java src/menu/*.java src/utils/*.java
+javac -d jreqsApp --module-path src/libs src/module-info.java src/httpService/*.java src/json/*.java src/main/*.java src/menu/*.java
 ```
 
 This command compiles the project's Java source files and places the generated `.class` files inside the `jreqsApp` directory.
